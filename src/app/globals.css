@@ -1046,12 +1046,55 @@ dd {
 
 .verify-main {
   display: grid;
+  width: min(100%, 100vw);
   min-height: 78vh;
   align-content: center;
+  padding: 2rem max(1rem, env(safe-area-inset-right)) 0
+    max(1rem, env(safe-area-inset-left));
+}
+
+.verification-layout {
+  display: grid;
+  width: min(100%, 44rem);
+  margin-inline: auto;
+  gap: 2rem;
 }
 
 .verification {
+  width: 100%;
+  margin-inline: auto;
+  box-sizing: border-box;
+  padding: clamp(1.5rem, 5vw, 3rem);
   text-align: center;
+}
+
+.verification h1 {
+  max-width: 100%;
+  margin-inline: auto;
+  font-size: clamp(2.75rem, 12vw, 5rem);
+  overflow-wrap: anywhere;
+}
+
+.verification .eyebrow {
+  max-width: 28rem;
+  margin-inline: auto;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.verification dl {
+  width: min(100%, 30rem);
+  margin-inline: auto;
+}
+
+.verification dl div {
+  justify-items: center;
+  text-align: center;
+}
+
+.verification dd {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .status-icon {
@@ -1060,10 +1103,27 @@ dd {
   height: 3rem;
   place-items: center;
   margin-bottom: 1rem;
+  margin-inline: auto;
   border: 2px solid var(--gold);
   border-radius: 50%;
   color: var(--navy);
   font-weight: 900;
+}
+
+.verification-limitations {
+  width: 100%;
+  margin-inline: auto;
+  box-sizing: border-box;
+  padding: clamp(1.25rem, 4vw, 2rem);
+}
+
+.verification-limitations h2 {
+  max-width: 100%;
+  font-size: clamp(2rem, 8vw, 3.5rem);
+}
+
+.verification-page .site-footer {
+  width: min(44rem, calc(100% - 2rem));
 }
 
 .rsvp-form {

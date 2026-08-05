@@ -17,10 +17,11 @@ export default async function VerifyPassPage({
   const result = await verifyGuestPassToken(token);
 
   return (
-    <div className="page-shell">
+    <div className="page-shell verification-page">
       <main id="main" className="verify-main">
+        <div className="verification-layout">
         {result.status === "valid" ? (
-          <section className="section-block verification valid">
+          <section className="section-block verification verification-card valid">
             <div className="status-icon" aria-hidden="true">
               ✓
             </div>
@@ -60,7 +61,7 @@ export default async function VerifyPassPage({
             </dl>
           </section>
         ) : (
-          <section className="section-block verification invalid">
+          <section className="section-block verification verification-card invalid">
             <div className="status-icon" aria-hidden="true">
               !
             </div>
@@ -78,7 +79,7 @@ export default async function VerifyPassPage({
             </p>
           </section>
         )}
-        <section className="section-block">
+        <section className="section-block verification-limitations">
           <h2>Verification limitations</h2>
           <p>
             This verification page demonstrates signed QR guest-pass validation.
@@ -87,6 +88,7 @@ export default async function VerifyPassPage({
             event staff access.
           </p>
         </section>
+        </div>
       </main>
       <SiteFooter />
     </div>
