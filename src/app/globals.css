@@ -967,6 +967,14 @@ dd {
   box-shadow: 0 24px 70px rgba(36, 51, 71, 0.13);
 }
 
+.guest-pass-card h2 {
+  font-size: clamp(2rem, 5vw, 3.1rem);
+}
+
+.guest-pass-card dd {
+  overflow-wrap: anywhere;
+}
+
 .pass-wrap > h1 {
   max-width: none;
   margin-top: 0.35rem;
@@ -992,6 +1000,48 @@ dd {
 
 .pass-print-note {
   font-size: 0.85rem;
+}
+
+.guest-pass-export-container {
+  position: fixed;
+  top: 0;
+  left: -10000px;
+  z-index: -1;
+  width: 680px;
+  background: var(--ivory);
+  pointer-events: none;
+}
+
+.guest-pass-export {
+  width: 680px !important;
+  min-width: 680px !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 48px !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+  transform: none !important;
+  translate: none !important;
+  border: 1px solid rgba(184, 138, 68, 0.55) !important;
+  background: var(--ivory) !important;
+  box-shadow: none !important;
+}
+
+.guest-pass-export h2 {
+  font-size: 2.9rem !important;
+}
+
+.guest-pass-export dl {
+  width: 100%;
+}
+
+.guest-pass-export dd {
+  overflow-wrap: anywhere;
+}
+
+.guest-pass-export .qr-frame {
+  width: 300px !important;
+  max-width: 300px !important;
 }
 
 .verify-main {
@@ -1266,12 +1316,18 @@ dd {
 
 @media print {
   @page {
-    margin: 0.5in;
-    size: auto;
+    margin: 8mm;
+    size: A4 portrait;
   }
 
+  html,
   body {
-    background: var(--ivory) !important;
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
   }
 
   body::before,
@@ -1286,6 +1342,7 @@ dd {
     display: none !important;
   }
 
+  .page-shell,
   main,
   .home-main,
   .invitation-stage,
@@ -1313,9 +1370,54 @@ dd {
     display: none !important;
   }
 
-  .guest-pass-card {
-    width: 100% !important;
-    break-inside: avoid;
+  .guest-pass-page,
+  .guest-pass-page main,
+  .guest-pass-page .pass-wrap {
+    display: block !important;
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: white !important;
     box-shadow: none !important;
+  }
+
+  .guest-pass-card {
+    display: grid !important;
+    width: 170mm !important;
+    max-width: 170mm !important;
+    min-height: 0 !important;
+    gap: 4mm !important;
+    margin: 0 auto !important;
+    padding: 9mm !important;
+    overflow: visible !important;
+    break-after: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+    border: 1px solid rgba(184, 138, 68, 0.55) !important;
+    background: var(--ivory) !important;
+    box-shadow: none !important;
+  }
+
+  .guest-pass-card h2 {
+    font-size: 24pt !important;
+  }
+
+  .guest-pass-card dl {
+    gap: 3mm !important;
+    margin: 2mm 0 !important;
+  }
+
+  .qr-frame {
+    width: 62mm !important;
+    max-width: 62mm !important;
+    border-width: 3mm !important;
+  }
+
+  .pass-print-note {
+    margin: 0 !important;
   }
 }
