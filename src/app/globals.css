@@ -205,6 +205,14 @@ main {
   border: 0;
   background: transparent;
   cursor: pointer;
+  transition:
+    transform 180ms ease,
+    filter 180ms ease;
+}
+
+.envelope:hover {
+  transform: translateY(-0.25rem);
+  filter: brightness(1.015);
 }
 
 .envelope-body,
@@ -423,11 +431,94 @@ main {
   font-size: 0.92rem;
 }
 
+.locked-access-panel {
+  display: grid;
+  width: min(620px, 100%);
+  justify-items: center;
+  gap: 0.85rem;
+  margin-top: 0.25rem;
+  text-align: center;
+}
+
+.locked-access-panel p {
+  margin: 0;
+}
+
+.access-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--gold);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.access-lock {
+  position: relative;
+  display: inline-block;
+  width: 0.8rem;
+  height: 0.62rem;
+  border: 1.5px solid currentColor;
+  border-radius: 0.12rem;
+}
+
+.access-lock::before {
+  position: absolute;
+  left: 50%;
+  bottom: 0.48rem;
+  width: 0.48rem;
+  height: 0.44rem;
+  border: 1.5px solid currentColor;
+  border-bottom: 0;
+  border-radius: 0.5rem 0.5rem 0 0;
+  content: "";
+  transform: translateX(-50%);
+}
+
+.open-invitation-button {
+  display: inline-flex;
+  width: min(100%, 22rem);
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(217, 190, 145, 0.7);
+  background: var(--navy);
+  color: var(--ivory);
+  padding: 0.95rem 1.35rem;
+  font-weight: 800;
+  text-align: center;
+  box-shadow: 0 16px 36px rgba(36, 51, 71, 0.18);
+  transition:
+    background 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.open-invitation-button:hover {
+  background: #1b2a3d;
+  transform: translateY(-0.12rem);
+  box-shadow: 0 20px 42px rgba(36, 51, 71, 0.22);
+}
+
+.access-cue {
+  color: var(--navy);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.demo-landing-hint {
+  max-width: 36rem;
+  color: rgba(60, 57, 54, 0.8);
+  font-size: 0.92rem;
+}
+
 .password-dialog {
   position: fixed;
   inset: 0;
   width: min(92vw, 440px);
-  max-height: min(92vh, 620px);
+  max-height: min(92vh, 760px);
   margin: auto;
   border: 1px solid var(--champagne);
   background: var(--ivory);
@@ -449,6 +540,94 @@ main {
 
 .password-dialog h2 {
   font-size: 2rem;
+}
+
+.demo-access-panel {
+  display: grid;
+  gap: 0.85rem;
+  border: 1px solid rgba(184, 138, 68, 0.34);
+  background: linear-gradient(135deg, rgba(247, 240, 229, 0.78), rgba(255, 250, 240, 0.92));
+  padding: 1rem;
+  text-align: left;
+}
+
+.demo-access-copy {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.demo-access-copy p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.demo-access-label {
+  color: var(--gold);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.demo-access-copy code {
+  display: block;
+  max-width: 100%;
+  border: 1px solid rgba(36, 51, 71, 0.16);
+  background: rgba(255, 253, 248, 0.9);
+  color: var(--navy);
+  padding: 0.7rem;
+  overflow-wrap: anywhere;
+  user-select: all;
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.demo-access-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.demo-access-actions button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(184, 138, 68, 0.5);
+  background: var(--ivory);
+  color: var(--navy);
+  padding: 0.65rem 0.8rem;
+  font: inherit;
+  font-weight: 800;
+}
+
+.demo-access-actions button:last-child {
+  background: var(--navy);
+  color: var(--ivory);
+}
+
+.demo-access-actions button:hover {
+  border-color: var(--gold);
+  background: var(--cream);
+}
+
+.demo-access-actions button:last-child:hover {
+  background: #1b2a3d;
+}
+
+.demo-feedback {
+  margin: -0.25rem 0 0;
+  color: var(--navy);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.field-help {
+  margin: -0.5rem 0 0;
+  color: rgba(60, 57, 54, 0.78);
+  font-size: 0.92rem;
 }
 
 .password-row {
@@ -1073,6 +1252,10 @@ dd {
 @media (max-width: 360px) {
   .countdown {
     grid-template-columns: 1fr;
+  }
+
+  .demo-access-actions button {
+    width: 100%;
   }
 
   .password-row,

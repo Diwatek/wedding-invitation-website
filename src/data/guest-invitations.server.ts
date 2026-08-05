@@ -15,6 +15,15 @@ export type WeddingGuest = {
 
 const guests = [
   {
+    id: "demo-guest",
+    displayName: "Diwatek Demonstration Guest",
+    greeting: "Dear Guest",
+    reservedSeats: 2,
+    guestType: "Couple",
+    childrenPermitted: false,
+    invitationCodeHash: "",
+  },
+  {
     id: "santos-family",
     displayName: "Mr. and Mrs. Daniel Santos and Family",
     greeting: "Dear Santos Family",
@@ -68,6 +77,8 @@ const guests = [
   },
 ] satisfies WeddingGuest[];
 
+const DEMO_GUEST_ID = "demo-guest";
+
 export function getGuestById(id: string | undefined) {
   return guests.find((guest) => guest.id === id) ?? null;
 }
@@ -95,6 +106,18 @@ export function getGuestChildrenText(guest: PublicWeddingGuest) {
 export async function findGuestByInvitationCode(code: string) {
   const normalizedCode = normalizeInvitationCode(code);
   if (normalizedCode.length < 12 || normalizedCode.length > 128) return null;
+
+  const demoCode = normalizeInvitationCode(
+    process.env.NEXT_PUBLIC_WEDDING_DEMO_CODE ?? "",
+  );
+  if (
+    process.env.NEXT_PUBLIC_WEDDING_DEMO_MODE === "true" &&
+    demoCode &&
+    normalizedCode === demoCode
+  ) {
+    return getGuestById(DEMO_GUEST_ID);
+  }
+
   const hash = await hashInvitationCode(normalizedCode);
   return guests.find((guest) => guest.invitationCodeHash === hash) ?? null;
 }

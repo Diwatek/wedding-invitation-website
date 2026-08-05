@@ -17,10 +17,15 @@ export function SealedInvitation({
   guest?: PublicWeddingGuest | null;
   turnstileSiteKey?: string;
 }) {
-  const openerRef = useRef<HTMLButtonElement>(null);
+  const sealedCardRef = useRef<HTMLButtonElement>(null);
+  const accessButtonRef = useRef<HTMLButtonElement>(null);
+  const activeOpenerRef = useRef<HTMLButtonElement | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [opened, setOpened] = useState(hasAccess);
   const [animate, setAnimate] = useState(false);
+  const showDemoHint =
+    process.env.NEXT_PUBLIC_WEDDING_DEMO_MODE === "true" &&
+    Boolean(process.env.NEXT_PUBLIC_WEDDING_DEMO_CODE?.trim());
 
   useEffect(() => {
     if (!hasAccess) return;
@@ -32,7 +37,8 @@ export function SealedInvitation({
     }
   }, [hasAccess]);
 
-  function openDialog() {
+  function openDialog(opener: HTMLButtonElement | null) {
+    activeOpenerRef.current = opener;
     dialogRef.current?.showModal();
   }
 
@@ -52,11 +58,15 @@ export function SealedInvitation({
       </div>
 
       <button
-        ref={openerRef}
+        ref={sealedCardRef}
         type="button"
         className={animate ? "envelope animate" : "envelope"}
-        aria-label={opened ? "Replay invitation envelope" : "View Invitation"}
-        onClick={opened ? () => setAnimate(true) : openDialog}
+        aria-label={
+          opened ? "Replay invitation envelope" : "Open private invitation"
+        }
+        onClick={
+          opened ? () => setAnimate(true) : () => openDialog(sealedCardRef.current)
+        }
       >
         <span className="envelope-flap" />
         <span className="envelope-body" />
@@ -109,15 +119,43 @@ export function SealedInvitation({
           <InvitationUtilityActions />
         </div>
       ) : (
-        <p className="security-note print-hidden">
-          This private invitation uses a guest-specific event code. A real
-          deployment should connect codes to an approved guest list.
-        </p>
+        <div className="locked-access-panel print-hidden">
+          <p className="access-label">
+            <span aria-hidden="true" className="access-lock" />
+            Private Guest Access
+          </p>
+          <button
+            ref={accessButtonRef}
+            type="button"
+            className="open-invitation-button"
+            aria-label="Open private invitation code dialog"
+            onClick={() => openDialog(accessButtonRef.current)}
+          >
+            Open Private Invitation
+          </button>
+          <p>
+            Enter the invitation code shared with you to view your personalized
+            invitation and wedding details.
+          </p>
+          <p className="access-cue">
+            Click the invitation or use the button below.
+          </p>
+          {showDemoHint ? (
+            <p className="demo-landing-hint">
+              Exploring the demo? A public access code is available inside the
+              invitation window.
+            </p>
+          ) : null}
+          <p className="security-note">
+            This private invitation uses a guest-specific event code. A real
+            deployment should connect codes to an approved guest list.
+          </p>
+        </div>
       )}
 
       <PasswordDialog
         dialogRef={dialogRef}
-        openerRef={openerRef}
+        openerRef={activeOpenerRef}
         onUnlocked={unlock}
         turnstileSiteKey={turnstileSiteKey}
       />

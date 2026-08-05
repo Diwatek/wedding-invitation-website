@@ -39,6 +39,8 @@ Create `.env.local`:
 WEDDING_SESSION_SECRET=replace-with-long-random-secret
 WEDDING_GUEST_PASS_SECRET=replace-with-different-long-random-secret
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=replace-with-cloudflare-turnstile-site-key
+NEXT_PUBLIC_WEDDING_DEMO_MODE=true
+NEXT_PUBLIC_WEDDING_DEMO_CODE=DIWATEK-DEMO-2027
 TURNSTILE_SECRET_KEY=replace-with-cloudflare-turnstile-secret-key
 TURNSTILE_ALLOWED_HOSTNAMES=localhost,127.0.0.1
 WEDDING_SITE_URL=https://wedding.diwatek.com
@@ -58,9 +60,49 @@ Fictional guest records live in `src/data/guest-invitations.server.ts`, which im
 
 Invitation codes are normalized by trimming, removing whitespace, and uppercasing. The server hashes the submitted code with SHA-256 using Web Crypto and compares it to stored hashes. This is suitable for the fictional demo, but a real deployment should use a private database, stronger code-management controls, revocation, audit logs, rate limiting, and administrative guest management.
 
-Keep any local plaintext demo codes in `guest-codes.local.txt`, which is
+Keep any local plaintext guest-specific codes in `guest-codes.local.txt`, which is
 ignored by Git. Do not commit plaintext invitation codes to README, public
 source files, Client Components, or browser-delivered assets.
+
+## Portfolio Demo Mode
+
+This portfolio site can expose one intentionally public demonstration code so
+visitors can explore the fictional personalized invitation flow without
+receiving a private guest code.
+
+Required public variables:
+
+```bash
+NEXT_PUBLIC_WEDDING_DEMO_MODE=false
+NEXT_PUBLIC_WEDDING_DEMO_CODE=
+```
+
+For the current Diwatek portfolio deployment, configure these Cloudflare
+Workers Build variables:
+
+```bash
+NEXT_PUBLIC_WEDDING_DEMO_MODE=true
+NEXT_PUBLIC_WEDDING_DEMO_CODE=DIWATEK-DEMO-2027
+```
+
+`DIWATEK-DEMO-2027` is intentionally public and is not a secret. When demo mode
+is enabled, the server accepts that code only after Turnstile validation and
+resolves it to the fictional `demo-guest` record. The signed HttpOnly access
+cookie and signed guest-pass QR token still contain only normal minimal claims,
+such as guest ID, wedding ID, token type, issued time, and expiration time.
+They do not contain invitation codes.
+
+For a real client wedding deployment, set:
+
+```bash
+NEXT_PUBLIC_WEDDING_DEMO_MODE=false
+```
+
+When disabled, the demo panel, public demo-code hint, public demo-code
+acceptance, and demo guest access are absent. Real guest codes remain
+server-only and should never be placed in Cloudflare build variables,
+README files, Client Components, URLs, analytics, cookies, QR payloads, or
+browser assets.
 
 Use Cloudflare's official Turnstile testing keys for local testing when a real
 widget is not available. The production widget should be dedicated to
@@ -124,6 +166,8 @@ Runtime secrets required in Cloudflare Workers:
 Build variable required for Workers Builds:
 
 - `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
+- `NEXT_PUBLIC_WEDDING_DEMO_MODE=true`
+- `NEXT_PUBLIC_WEDDING_DEMO_CODE=DIWATEK-DEMO-2027`
 
 Non-secret Worker vars:
 

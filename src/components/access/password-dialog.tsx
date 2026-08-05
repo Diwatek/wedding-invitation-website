@@ -31,7 +31,11 @@ export function PasswordDialog({
   const [showCode, setShowCode] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState("");
   const [error, setError] = useState("");
+  const [demoFeedback, setDemoFeedback] = useState("");
   const [isPending, startTransition] = useTransition();
+  const demoModeEnabled = process.env.NEXT_PUBLIC_WEDDING_DEMO_MODE === "true";
+  const demoCode = process.env.NEXT_PUBLIC_WEDDING_DEMO_CODE ?? "";
+  const showDemoAccess = demoModeEnabled && demoCode.trim().length > 0;
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -53,6 +57,24 @@ export function PasswordDialog({
 
   function closeDialog() {
     dialogRef.current?.close();
+  }
+
+  async function copyDemoCode() {
+    try {
+      await navigator.clipboard.writeText(demoCode);
+      setDemoFeedback("Demo code copied.");
+    } catch {
+      setDemoFeedback(
+        "Unable to copy automatically. Select the code and copy it manually.",
+      );
+    }
+  }
+
+  function useDemoCode() {
+    setCode(demoCode);
+    setError("");
+    setDemoFeedback("Demo code added.");
+    inputRef.current?.focus();
   }
 
   function submit(event: FormEvent<HTMLFormElement>) {
@@ -82,7 +104,40 @@ export function PasswordDialog({
           <p className="eyebrow">Private invitation</p>
           <h2>Open our private wedding invitation.</h2>
         </div>
+        {showDemoAccess ? (
+          <section className="demo-access-panel" aria-labelledby="demo-access-title">
+            <div className="demo-access-copy">
+              <p id="demo-access-title" className="demo-access-label">
+                Portfolio Demo Access
+              </p>
+              <p>
+                Use the public demonstration code below to explore this fictional
+                wedding website.
+              </p>
+              <code>{demoCode}</code>
+            </div>
+            <div className="demo-access-actions">
+              <button type="button" onClick={copyDemoCode}>
+                Copy Code
+              </button>
+              <button type="button" onClick={useDemoCode}>
+                Use Demo Code
+              </button>
+            </div>
+            <p className="sr-only" aria-live="polite">
+              {demoFeedback}
+            </p>
+            {demoFeedback ? (
+              <p className="demo-feedback" aria-hidden="true">
+                {demoFeedback}
+              </p>
+            ) : null}
+          </section>
+        ) : null}
         <label htmlFor="invitation-code">Invitation code</label>
+        <p id="invitation-code-help" className="field-help">
+          Enter the private code included with your invitation.
+        </p>
         <div className="password-row">
           <input
             ref={inputRef}
@@ -92,7 +147,9 @@ export function PasswordDialog({
             autoComplete="one-time-code"
             maxLength={128}
             value={code}
-            aria-describedby={error ? "code-error" : undefined}
+            aria-describedby={
+              error ? "invitation-code-help code-error" : "invitation-code-help"
+            }
             aria-invalid={error ? "true" : "false"}
             onChange={(event) => setCode(event.target.value)}
             required
